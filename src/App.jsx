@@ -30,7 +30,8 @@ function App() {
         category: "electronics",
       }),
     });
-    alert(`Le produit avec l'id ${(await response.json()).id} a été créé`);
+    const newProduct = await response.json();
+    alert(`Le produit avec l'id ${newProduct.id} a été créé`);
   };
 
   return (
