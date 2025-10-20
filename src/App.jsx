@@ -23,12 +23,7 @@ function App() {
         {products.map((product) => (
           <Col key={product.id} xs={12} sm={6} md={4} lg={3}>
             <Card className="h-100">
-              <Card.Img
-                variant="top"
-                src={product.image}
-                alt={product.title}
-                className="product-image"
-              />
+              <Card.Img variant="top" src={product.image} alt={product.title} />
               <Card.Body>
                 <Card.Title className="fs-6">{product.title}</Card.Title>
                 <Card.Text className="text-muted mb-2">
