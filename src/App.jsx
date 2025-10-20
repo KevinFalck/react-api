@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useEffect, useState } from "react";
 import React from "react";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import "./App.css";
 
 function App() {
@@ -16,9 +16,29 @@ function App() {
     fetchProducts();
   }, []);
 
+  const addProduct = async () => {
+    const response = await fetch("https://fakestoreapi.com/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: "Nouveau produit",
+        price: 29.99,
+        description: "Un super produit ajouté via API",
+        image: "https://picsum.photos/400/300.webp",
+        category: "electronics",
+      }),
+    });
+    alert(`Le produit avec l'id ${(await response.json()).id} a été créé`);
+  };
+
   return (
     <Container className="py-4">
       <h1 className="mb-4">Produits</h1>
+      <Button variant="primary" className="mb-4" onClick={addProduct}>
+        Ajouter un produit
+      </Button>
       <Row className="g-4">
         {products.map((product) => (
           <Col key={product.id} xs={12} sm={6} md={4} lg={3}>
