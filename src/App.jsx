@@ -64,6 +64,13 @@ function App() {
     alert(`Le produit avec l'id ${productId} a été modifié`);
   };
 
+  const deleteProduct = async (productId) => {
+    await fetch(`https://fakestoreapi.com/products/${productId}`, {
+      method: "DELETE",
+    });
+    alert(`Le produit avec l'id ${productId} a été supprimé`);
+  };
+
   return (
     <Container className="py-4">
       <h1 className="mb-4">Produits</h1>
@@ -95,6 +102,13 @@ function App() {
                     onClick={() => updateCompleteProduct(product.id)}
                   >
                     Modifier le produit complet
+                  </Button>
+                  <Button
+                    variant="outline-danger"
+                    size="sm"
+                    onClick={() => deleteProduct(product.id)}
+                  >
+                    Supprimer le produit
                   </Button>
                 </div>
               </Card.Body>
