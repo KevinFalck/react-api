@@ -1,35 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// @ts-nocheck
+import { useEffect, useState } from "react";
+import React from "react";
+import { Container, Row, Col, Card } from "react-bootstrap";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      const response = await fetch("https://fakestoreapi.com/products");
+      const data = await response.json();
+      setProducts(data);
+    }
+    fetchProducts();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Container className="py-4">
+      <h1 className="mb-4">Produits</h1>
+      <Row className="g-4">
+        {products.map((product) => (
+          <Col key={product.id} xs={12} sm={6} md={4} lg={3}>
+            <Card className="h-100">
+              <Card.Img
+                variant="top"
+                src={product.image}
+                alt={product.title}
+                className="product-image"
+              />
+              <Card.Body>
+                <Card.Title className="fs-6">{product.title}</Card.Title>
+                <Card.Text className="text-muted mb-2">
+                  {product.description}
+                </Card.Text>
+                <Card.Text className="mb-0">{product.price} €</Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    </Container>
+  );
 }
 
-export default App
+export default App;
