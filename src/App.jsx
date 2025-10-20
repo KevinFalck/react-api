@@ -47,6 +47,23 @@ function App() {
     alert(`Le prix du produit avec l'id ${productId} a été modifié`);
   };
 
+  const updateCompleteProduct = async (productId) => {
+    await fetch(`https://fakestoreapi.com/products/${productId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: "Produit modifié",
+        price: 49.9,
+        description: "Description modifiée",
+        image: "https://picsum.photos/400/300.webp",
+        category: "electronics",
+      }),
+    });
+    alert(`Le produit avec l'id ${productId} a été modifié`);
+  };
+
   return (
     <Container className="py-4">
       <h1 className="mb-4">Produits</h1>
@@ -64,13 +81,22 @@ function App() {
                   {product.description}
                 </Card.Text>
                 <Card.Text className="mb-3">{product.price} €</Card.Text>
-                <Button
-                  variant="outline-primary"
-                  size="sm"
-                  onClick={() => updateProductPrice(product.id)}
-                >
-                  Modifier le prix du produit
-                </Button>
+                <div className="d-grid gap-2">
+                  <Button
+                    variant="outline-secondary"
+                    size="sm"
+                    onClick={() => updateProductPrice(product.id)}
+                  >
+                    Modifier le prix du produit
+                  </Button>
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    onClick={() => updateCompleteProduct(product.id)}
+                  >
+                    Modifier le produit complet
+                  </Button>
+                </div>
               </Card.Body>
             </Card>
           </Col>
