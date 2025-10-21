@@ -57,6 +57,7 @@ function App() {
       }
 
       const newProduct = await response.json();
+      setProducts((prevProducts) => [...prevProducts, newProduct]);
       alert(`Le produit avec l'id ${newProduct.id} a été créé`);
     } catch (error) {
       alert("Erreur lors de l'ajout du produit.");
@@ -84,6 +85,12 @@ function App() {
           `Erreur HTTP: ${response.status} - ${response.statusText}`
         );
       }
+
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product.id === productId ? { ...product, price: 5 } : product
+        )
+      );
 
       alert(`Le prix du produit avec l'id ${productId} a été modifié`);
     } catch (error) {
@@ -120,6 +127,21 @@ function App() {
         );
       }
 
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product.id === productId
+            ? {
+                ...product,
+                title: "Produit modifié",
+                price: 49.9,
+                description: "Description modifiée",
+                image: "https://picsum.photos/400/300.webp",
+                category: "electronics",
+              }
+            : product
+        )
+      );
+
       alert(`Le produit avec l'id ${productId} a été modifié`);
     } catch (error) {
       alert("Erreur lors de la modification du produit.");
@@ -142,6 +164,9 @@ function App() {
         );
       }
 
+      setProducts((prevProducts) =>
+        prevProducts.filter((product) => product.id !== productId)
+      );
       alert(`Le produit avec l'id ${productId} a été supprimé`);
     } catch (error) {
       alert("Erreur lors de la suppression du produit.");
