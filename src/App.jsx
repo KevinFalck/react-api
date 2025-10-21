@@ -6,69 +6,117 @@ import "./App.css";
 
 function App() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchProducts() {
-      const response = await fetch("https://fakestoreapi.com/products");
-      const data = await response.json();
-      setProducts(data);
+      try {
+        const response = await fetch("https://fakestoreapi.com/products");
+        if (!response.ok) {
+          throw new Error(
+            `Erreur HTTP: ${
+              response.statusText ? response.statusText + " - " : ""
+            }${response.status}`
+          );
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        setError(
+          "Une erreur est survenue lors de la récupération des produits."
+        );
+        console.error(err.message);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchProducts();
   }, []);
 
+  if (error) return <p>{error}</p>;
+  if (loading) return <p>Chargement...</p>;
+
   const addProduct = async () => {
-    const response = await fetch("https://fakestoreapi.com/products", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: "Nouveau produit",
-        price: 29.99,
-        description: "Un super produit ajouté via API",
-        image: "https://picsum.photos/400/300.webp",
-        category: "electronics",
-      }),
-    });
-    const newProduct = await response.json();
-    alert(`Le produit avec l'id ${newProduct.id} a été créé`);
+    try {
+      const response = await fetch("https://fakestoreapi.com/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: "Nouveau produit",
+          price: 29.99,
+          description: "Un super produit ajouté via API",
+          image: "https://picsum.photos/400/300.webp",
+          category: "electronics",
+        }),
+      });
+
+      const newProduct = await response.json();
+      alert(`Le produit avec l'id ${newProduct.id} a été créé`);
+    } catch (error) {
+      alert("Erreur lors de l'ajout du produit.");
+      console.error("Erreur lors de l'ajout du produit:", error);
+    }
   };
 
   const updateProductPrice = async (productId) => {
-    await fetch(`https://fakestoreapi.com/products/${productId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        price: 5,
-      }),
-    });
-    alert(`Le prix du produit avec l'id ${productId} a été modifié`);
+    try {
+      await fetch(`https://fakestoreapi.com/products/${productId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          price: 5,
+        }),
+      });
+
+      alert(`Le prix du produit avec l'id ${productId} a été modifié`);
+    } catch (error) {
+      alert("Erreur lors de la modification du prix du produit.");
+      console.error(
+        "Erreur lors de la modification du prix du produit:",
+        error
+      );
+    }
   };
 
   const updateCompleteProduct = async (productId) => {
-    await fetch(`https://fakestoreapi.com/products/${productId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: "Produit modifié",
-        price: 49.9,
-        description: "Description modifiée",
-        image: "https://picsum.photos/400/300.webp",
-        category: "electronics",
-      }),
-    });
-    alert(`Le produit avec l'id ${productId} a été modifié`);
+    try {
+      await fetch(`https://fakestoreapi.com/products/${productId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: "Produit modifié",
+          price: 49.9,
+          description: "Description modifiée",
+          image: "https://picsum.photos/400/300.webp",
+          category: "electronics",
+        }),
+      });
+
+      alert(`Le produit avec l'id ${productId} a été modifié`);
+    } catch (error) {
+      alert("Erreur lors de la modification du produit.");
+      console.error("Erreur lors de la modification du produit:", error);
+    }
   };
 
   const deleteProduct = async (productId) => {
-    await fetch(`https://fakestoreapi.com/products/${productId}`, {
-      method: "DELETE",
-    });
-    alert(`Le produit avec l'id ${productId} a été supprimé`);
+    try {
+      await fetch(`https://fakestoreapi.com/products/${productId}`, {
+        method: "DELETE",
+      });
+
+      alert(`Le produit avec l'id ${productId} a été supprimé`);
+    } catch (error) {
+      alert("Erreur lors de la suppression du produit.");
+      console.error("Erreur lors de la suppression du produit:", error);
+    }
   };
 
   return (
