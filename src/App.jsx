@@ -34,9 +34,6 @@ function App() {
     fetchProducts();
   }, []);
 
-  if (error) return <p>{error}</p>;
-  if (loading) return <p>Chargement...</p>;
-
   const addProduct = async () => {
     try {
       const response = await fetch("https://fakestoreapi.com/products", {
@@ -53,6 +50,12 @@ function App() {
         }),
       });
 
+      if (!response.ok) {
+        throw new Error(
+          `Erreur HTTP: ${response.status} - ${response.statusText}`
+        );
+      }
+
       const newProduct = await response.json();
       alert(`Le produit avec l'id ${newProduct.id} a été créé`);
     } catch (error) {
@@ -63,15 +66,24 @@ function App() {
 
   const updateProductPrice = async (productId) => {
     try {
-      await fetch(`https://fakestoreapi.com/products/${productId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          price: 5,
-        }),
-      });
+      const response = await fetch(
+        `https://fakestoreapi.com/products/${productId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            price: 5,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Erreur HTTP: ${response.status} - ${response.statusText}`
+        );
+      }
 
       alert(`Le prix du produit avec l'id ${productId} a été modifié`);
     } catch (error) {
@@ -85,19 +97,28 @@ function App() {
 
   const updateCompleteProduct = async (productId) => {
     try {
-      await fetch(`https://fakestoreapi.com/products/${productId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: "Produit modifié",
-          price: 49.9,
-          description: "Description modifiée",
-          image: "https://picsum.photos/400/300.webp",
-          category: "electronics",
-        }),
-      });
+      const response = await fetch(
+        `https://fakestoreapi.com/products/${productId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: "Produit modifié",
+            price: 49.9,
+            description: "Description modifiée",
+            image: "https://picsum.photos/400/300.webp",
+            category: "electronics",
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Erreur HTTP: ${response.status} - ${response.statusText}`
+        );
+      }
 
       alert(`Le produit avec l'id ${productId} a été modifié`);
     } catch (error) {
@@ -108,9 +129,18 @@ function App() {
 
   const deleteProduct = async (productId) => {
     try {
-      await fetch(`https://fakestoreapi.com/products/${productId}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `https://fakestoreapi.com/products/${productId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Erreur HTTP: ${response.status} - ${response.statusText}`
+        );
+      }
 
       alert(`Le produit avec l'id ${productId} a été supprimé`);
     } catch (error) {
@@ -118,6 +148,9 @@ function App() {
       console.error("Erreur lors de la suppression du produit:", error);
     }
   };
+
+  if (error) return <p>{error}</p>;
+  if (loading) return <p>Chargement...</p>;
 
   return (
     <Container className="py-4">
